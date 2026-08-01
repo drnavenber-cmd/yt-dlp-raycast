@@ -229,7 +229,8 @@ export function DownloadTasks() {
   }, []);
 
   const activeTasks = tasks.filter((task) => task.status === "queued" || task.status === "running");
-  const historyTasks = tasks.filter((task) => !activeTasks.includes(task));
+  const recentCompletionIds = new Set(completionNotice.map((task) => task.id));
+  const historyTasks = tasks.filter((task) => !activeTasks.includes(task) && !recentCompletionIds.has(task.id));
 
   const handleCancel = (task: TaskRecord) => {
     cancelTask(task);
@@ -306,11 +307,15 @@ function CompletedTaskItem({ task }: { task: TaskRecord }) {
             shortcut={{ modifiers: ["cmd"], key: "o" }}
           />
           <Action.ShowInFinder
-            title="Show Download in Finder"
+            title="Show Downloaded File in Finder"
             path={openTarget(task)}
+          />
+          <Action.Open
+            title="Open Download Folder"
+            target={task.outputDir}
+            icon={Icon.Folder}
             shortcut={{ modifiers: ["cmd", "shift"], key: "o" }}
           />
-          <Action.Open title="Open Download Folder" target={task.outputDir} icon={Icon.Folder} />
           <Action.CopyToClipboard title="Copy Downloaded File Path" content={task.outputPath ?? task.outputDir} />
         </ActionPanel>
       }
