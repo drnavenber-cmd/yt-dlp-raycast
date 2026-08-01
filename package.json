@@ -1,0 +1,49 @@
+{
+  "name": "yt-dlp-raycast",
+  "title": "Yt-Dlp Download",
+  "description": "Download video, audio, or subtitles with the local yt-dlp installation",
+  "icon": "icon.png",
+  "author": "nar",
+  "license": "MIT",
+  "platforms": [
+    "macOS"
+  ],
+  "categories": [
+    "Media",
+    "Productivity"
+  ],
+  "keywords": [
+    "video",
+    "audio",
+    "download",
+    "youtube",
+    "media"
+  ],
+  "commands": [
+    {
+      "name": "download",
+      "title": "Download with Yt-Dlp",
+      "description": "Download a video, audio track, or subtitles",
+      "mode": "view"
+    },
+    {
+      "name": "tasks",
+      "title": "Download Tasks",
+      "description": "View and control all active and recent downloads",
+      "mode": "view"
+    }
+  ],
+  "dependencies": {
+    "@raycast/api": "latest",
+    "@raycast/utils": "latest"
+  },
+  "devDependencies": {
+    "@types/node": "^22.19.17",
+    "typescript": "^7.0.2"
+  },
+  "scripts": {
+    "dev": "ray develop",
+    "build": "ray build -e dist -o dist",
+    "lint": "ray lint"
+  }
+}
