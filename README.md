@@ -23,6 +23,30 @@
 - ffmpeg：`/opt/homebrew/bin/ffmpeg`
 - 下载目录：`~/Downloads/yt-dlp`
 
+## 安装与使用
+
+先安装运行依赖：
+
+```bash
+brew install yt-dlp ffmpeg
+```
+
+从 GitHub 获取源码并以 Raycast 开发扩展运行：
+
+```bash
+git clone https://github.com/drnavenber-cmd/yt-dlp-raycast.git
+cd yt-dlp-raycast
+npm install
+npm run dev
+```
+
+开发模式启动后，在 Raycast 中使用两个命令：
+
+1. `Download with Yt-Dlp`：粘贴一个或多个 URL，选择格式后提交；也可以在 Action 面板按 `⌘K`，选择从剪贴板粘贴。
+2. `Download Tasks`：查看全部任务。活动任务显示实时进度，失败任务显示原因和建议，完成任务可以按 `⌘O` 打开文件、按 `⌘⇧O` 打开下载目录。
+
+任务状态保存在 `~/Library/Application Support/yt-dlp-raycast/`，下载文件默认保存在 `~/Downloads/yt-dlp/`。当前仓库是公开源码作品，尚未作为 Raycast Store 扩展发布；其他用户可以按上面的开发模式运行。
+
 ## 开发
 
 ```bash
