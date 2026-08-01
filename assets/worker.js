@@ -348,11 +348,11 @@ function classifyFailure(lines, code, signal) {
   if (/too many requests|http error 429|rate.?limit|temporarily blocked/.test(text)) {
     return { kind: "rate_limited", error: "站点限流或暂时封锁请求", hint: "稍后重试，减少同时下载数量，必要时使用已登录浏览器 Cookies。" };
   }
+  if (/no video could be found|video(?:\s+#\d+)?\s+unavailable|video unavailable|deleted|not available|geo.?restricted/.test(text)) {
+    return { kind: "unavailable", error: "链接中的媒体不可用或站点不支持", hint: "确认原帖仍公开可见，尝试原帖链接，不要使用失效的 /video/1 变体。" };
+  }
   if (/sign in|log in|login|authentication|cookies?\b|guest token|private video|members-only|age.?restricted|confirm you('re| are) not a bot/.test(text)) {
     return { kind: "authentication", error: "站点要求登录或 Cookies 不可用", hint: "在表单里选择已登录的 Chrome、Safari 或 Firefox；只读取本机 Cookies。" };
-  }
-  if (/no video could be found|video #\d+ is unavailable|private|deleted|not available|geo.?restricted/.test(text)) {
-    return { kind: "unavailable", error: "链接中的媒体不可用或站点不支持", hint: "确认原帖仍公开可见，尝试原帖链接，不要使用失效的 /video/1 变体。" };
   }
   if (/timed out|timeout|unable to connect|connection|network|proxy|dns|temporary failure|tls|ssl|http error 5\d\d/.test(text)) {
     return { kind: "network", error: "网络、代理或站点连接失败", hint: "检查网络和代理后重试；任务已保留，不需要重新粘贴 URL。" };
