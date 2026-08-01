@@ -10,7 +10,7 @@ import {
 } from "@raycast/api";
 import { FormValidation, useForm } from "@raycast/utils";
 import { homedir } from "node:os";
-import { join, resolve } from "node:path";
+import { basename, join, resolve } from "node:path";
 import { useEffect, useState } from "react";
 import { DownloadTasks } from "./task-ui";
 import { enqueueTask, type CookieSource, type DownloadJob, type DownloadMode } from "./task-runner";
@@ -45,13 +45,14 @@ function expandPath(value: string): string {
 function getUnseenCompletionText(): string | null {
   const appState = readTaskAppState();
   if (appState.unseenCompletionIds && appState.unseenCompletionIds.length > 0) {
-    const unseenCount = listTaskStates().filter(
+    const unseenTasks = listTaskStates().filter(
       (task) => task.status === "success" && appState.unseenCompletionIds?.includes(task.id),
-    ).length;
-    if (unseenCount > 0) {
-      return unseenCount === 1
-        ? "✅ 有 1 个下载任务刚刚完成 · 打开 Download Tasks 查看"
-        : `✅ 有 ${unseenCount} 个下载任务刚刚完成 · 打开 Download Tasks 查看`;
+    );
+    if (unseenTasks.length > 0) {
+      const label = unseenTasks[0]?.outputPath ? basename(unseenTasks[0].outputPath) : unseenTasks[0]?.url;
+      return unseenTasks.length === 1
+        ? `✅ 已完成：${label ?? "1 个下载任务"} · 打开 Download Tasks 查看`
+        : `✅ 已完成：${label ?? "下载任务"} 等 ${unseenTasks.length} 个任务 · 打开 Download Tasks 查看`;
     }
   }
   const lastViewedAt = appState.lastViewedCompletionAt
@@ -65,9 +66,10 @@ function getUnseenCompletionText(): string | null {
     .filter((task) => task.status === "success" && task.finishedAt && new Date(task.finishedAt).getTime() > lastViewedAt)
     .sort((left, right) => (right.finishedAt ?? "").localeCompare(left.finishedAt ?? ""));
   if (completed.length === 0) return null;
+  const label = completed[0].outputPath ? basename(completed[0].outputPath) : completed[0].url;
   return completed.length === 1
-    ? "✅ 有 1 个下载任务刚刚完成 · 打开 Download Tasks 查看"
-    : `✅ 有 ${completed.length} 个下载任务刚刚完成 · 打开 Download Tasks 查看`;
+    ? `✅ 已完成：${label} · 打开 Download Tasks 查看`
+    : `✅ 已完成：${label} 等 ${completed.length} 个任务 · 打开 Download Tasks 查看`;
 }
 
 export function DownloadForm() {
@@ -115,8 +117,6 @@ export function DownloadForm() {
   }, []);
 
   const openCompletionTasks = () => {
-    const appState = readTaskAppState();
-    writeTaskAppState({ ...appState, lastViewedCompletionAt: new Date().toISOString(), unseenCompletionIds: [] });
     setCompletionNotice(null);
     navigation.push(<DownloadTasks />);
   };
